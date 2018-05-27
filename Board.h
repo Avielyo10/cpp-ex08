@@ -15,7 +15,6 @@ class Board{
     public:
     int size;
     string name;
-    static int numFile;
     square** board;
     Board(){}
     Board(int num);

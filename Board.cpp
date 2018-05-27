@@ -2,10 +2,17 @@
 #include <boost/functional/hash.hpp>
 #include <iostream>
 using namespace std;
+
+/*
+hash-code function to create unique name for every image
+*/
 int hashCode(string s){
     boost::hash<std::string> string_hash;
     return string_hash(s);
 }
+/*
+ctor 
+*/
 Board::Board(int num){
     board = new square*[num];
     for(int i = 0; i < num;++i){
@@ -17,6 +24,9 @@ Board::Board(int num){
     size = num;
     name="";
 }
+/*
+copy ctor
+*/
 Board::Board(const Board& b){
     size = b.size;
     name = b.name;
@@ -28,12 +38,18 @@ Board::Board(const Board& b){
         }
     }
 }
+/*
+dtor
+*/
 Board::~Board(){
     for(int i = 0; i < size;++i){
         delete[] board[i];
     }
     delete[] board;
 }
+/*
+overloading operator <<
+*/
 ostream& operator<<(ostream& out,Board const &b){
     string res = "";
     for(int i = 0; i<b.size; ++i){
@@ -44,6 +60,9 @@ ostream& operator<<(ostream& out,Board const &b){
     }
     return out<<res;
 }
+/*
+overloading operator >>
+*/
 istream& operator>>(istream& in,Board &b){
     int counter=0,tempSize=0;
     char c;
@@ -75,12 +94,18 @@ istream& operator>>(istream& in,Board &b){
     b.name = to_string(hashCode(temp.name));
     return in;
 }
+/*
+
+*/
 int Board::theRightRatio(uint num, int size){
     while(num%size!=0){
         num++;
     }
     return num/size;
 }
+/*
+
+*/
 string Board::draw(uint num){ 
     string fileName = "img_"+name+".ppm";
     ofstream imageFile(fileName, ios::out | ios::binary);
@@ -99,10 +124,15 @@ string Board::draw(uint num){
     imageFile.close();
     return fileName;
 }
-int Board::numFile =0;
+/*
+overloading operator []
+*/
 square& Board::operator[](const pair<int,int>& someIndex){
     return board[someIndex.first][someIndex.second];
 }
+/*
+overloading operator = ot char
+*/
 Board& Board::operator=(char c){
     for(int i = 0; i < size;++i){
         for(int j = 0; j < size;++j){
@@ -111,6 +141,9 @@ Board& Board::operator=(char c){
     } 
     return *this;
 }
+/*
+overloading operator = to another board
+*/
 Board& Board::operator=(Board &b){
     if(size>0){
         this->~Board();
@@ -125,6 +158,9 @@ Board& Board::operator=(Board &b){
     }
     return *this;
 }
+/*
+overloading operator ==
+*/
 bool Board::operator==(Board &b)const{
     if(size!=b.size){
         return false;
