@@ -99,7 +99,7 @@ istream& operator>>(istream& in,Board &b){
         }
     }
     b = temp;
-    b.name = b.random_string(1);
+    b.name = b.random_string(10);
     return in;
 }
 /*
@@ -123,9 +123,26 @@ string Board::draw(uint num){
     for (int j = 0; j < num; ++j){
         for (int i = 0; i < num; ++i){ 
             char boardChar=board[j/ratio][i/ratio];
-            image[num*j+i].red = (boardChar%256);
-            image[num*j+i].green = (boardChar%256);
-            image[num*j+i].blue = (boardChar%256);
+            if(boardChar=='X'){// X gets red
+                image[num*j+i].red = 255;
+                image[num*j+i].green = 0;
+                image[num*j+i].blue = 0;
+            }
+            else if(boardChar=='O'){//O gets green
+                image[num*j+i].red = 0;
+                image[num*j+i].green = 255;
+                image[num*j+i].blue = 0;
+            }
+            else if(boardChar=='.'){//. gets blue
+                image[num*j+i].red = 0;
+                image[num*j+i].green = 0;
+                image[num*j+i].blue = 255;
+            }
+            else{//if its another char it will be some kind of grey
+                image[num*j+i].red = (boardChar%256);
+                image[num*j+i].green = (boardChar%256);
+                image[num*j+i].blue = (boardChar%256);                
+            }
         }
     }  
     imageFile.write(reinterpret_cast<char*>(&image),3*num*num);
