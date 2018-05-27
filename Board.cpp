@@ -1,14 +1,23 @@
 #include "Board.h"
-#include <boost/functional/hash.hpp>
 #include <iostream>
+#include <random>
+#include <string>
 using namespace std;
 
 /*
-hash-code function to create unique name for every image
+generating random string for the name of the new image that created
 */
-int hashCode(string s){
-    boost::hash<std::string> string_hash;
-    return string_hash(s);
+string Board::random_string(int max_length){
+    string possible_characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    random_device rd;
+    mt19937 engine(rd());
+    uniform_int_distribution<> dist(0, possible_characters.size()-1);
+    string ret = "";
+    for(int i = 0; i < max_length; i++){
+        int random_index = dist(engine); //get index between 0 and possible_characters.size()-1
+        ret += possible_characters[random_index];
+    }
+    return ret;
 }
 /*
 ctor 
@@ -79,7 +88,6 @@ istream& operator>>(istream& in,Board &b){
     Board temp{tempSize};
     int k = 0;
     for(int i=0;i<temp.size;++i){
-        temp.name+=allChars.at(k);
         for(int j=0;j<temp.size;++j){
             if(allChars.at(k)!='\n'){
                 temp.board[i][j] = allChars.at(k);  
@@ -91,11 +99,11 @@ istream& operator>>(istream& in,Board &b){
         }
     }
     b = temp;
-    b.name = to_string(hashCode(temp.name));
+    b.name = b.random_string(1);
     return in;
 }
 /*
-
+fixing the ratio if the num of pixels cannot be divided with the size of the matrix
 */
 int Board::theRightRatio(uint num, int size){
     while(num%size!=0){
@@ -104,7 +112,7 @@ int Board::theRightRatio(uint num, int size){
     return num/size;
 }
 /*
-
+create the image return the file name
 */
 string Board::draw(uint num){ 
     string fileName = "img_"+name+".ppm";

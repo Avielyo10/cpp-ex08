@@ -28,5 +28,6 @@ class Board{
     bool operator==(Board &b)const;
     string draw(uint num);
     int theRightRatio(uint num, int size);
+    string random_string(int length);
 };
 
